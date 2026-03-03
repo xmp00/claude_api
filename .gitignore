@@ -1,0 +1,10 @@
+logs/
+*.log
+*.jsonl
+.env
+__pycache__/
+*.pyc
+burp-ca.der
+burp-ca.pem
+.idea/
+.DS_Store
