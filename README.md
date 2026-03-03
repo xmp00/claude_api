@@ -4,6 +4,8 @@ A Python client for the [Anthropic Messages API](https://docs.anthropic.com/en/a
 
 The project grew out of systematic hands-on study of the API: reading the documentation, implementing the client, deliberately triggering every documented error type, and verifying behaviour at the raw HTTP level using Postman and Burp Suite on Windows. The troubleshooting notes, inline comments, and Q&A reference are a direct record of that process.
 
+![Welcome](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/logo.png)
+
 ---
 
 ## Contents
@@ -285,7 +287,7 @@ response = client.send_message(
 # Log: output_tokens=5 | stop_reason=max_tokens
 ```
 
-![CLI working with logging](docs/screenshots/Screenshot_2026-03-03_175350.png)
+![CLI working with logging](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/Screenshot%202026-03-03%20175350.png)
 
 ---
 
@@ -306,11 +308,11 @@ response = client.send_message(
 | 400 Assistant Start | First message is assistant | 400 invalid_request_error |
 | GET 405 — Method Not Allowed | GET instead of POST | 405 Method Not Allowed |
 
-![Postman collection](docs/screenshots/2026-03-03_17_22_17-Playing_around_-_My_Workspace.png)
+![Postman collection](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2017_22_17-Playing%20around%20-%20My%20Workspace.png)
 
 *System prompt test — correct placement returns HTTP 200 with the expected pirate response. Wrong placement (role:system inside messages) returns HTTP 400.*
 
-![System prompt correct](docs/screenshots/2026-03-03_17_23_33-Playing_around_-_My_Workspace.png)
+![System prompt correct](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2017_23_33-Playing%20around%20-%20My%20Workspace.png)
 
 Full setup guide: [`docs/postman/README.md`](docs/postman/README.md)
 
@@ -322,25 +324,25 @@ All Python API traffic was routed through Burp Suite Community Edition as an int
 
 **HTTP History — successful 200 request captured:**
 
-![Burp HTTP History](docs/screenshots/2026-03-03_18_47_39-Burp_Suite_Community_Edition_v2026_1_5_-_Temporary_Project.png)
+![Burp HTTP History](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2018_47_39-Burp%20Suite%20Community%20Edition%20v2026.1.5%20-%20Temporary%20Project.png)
 
 The Inspector panel (right side) shows parsed request headers: `X-Api-Key`, `Anthropic-Version`, `Content-Length`, `User-Agent: Python-urllib/3.13`. The response section shows the full `Anthropic-Ratelimit-*` header set.
 
 **Repeater — 401 authentication error:**
 
-![Burp Repeater 401](docs/screenshots/2026-03-03_18_51_45-Burp_Suite_Community_Edition_v2026_1_5_-_Temporary_Project.png)
+![Burp Repeater 401](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2018_51_45-Burp%20Suite%20Community%20Edition%20v2026.1.5%20-%20Temporary%20Project.png)
 
 Fake key `sk-ant-api03-1337` in the `x-api-key` header. Response: `HTTP 401`, `type: authentication_error`, `message: invalid x-api-key`, `X-Should-Retry: false`.
 
 **Repeater — 400 system role in messages:**
 
-![Burp Repeater 400](docs/screenshots/2026-03-03_18_53_46-Burp_Suite_Community_Edition_v2026_1_5_-_Temporary_Project.png)
+![Burp Repeater 400](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2018_53_46-Burp%20Suite%20Community%20Edition%20v2026.1.5%20-%20Temporary%20Project.png)
 
 Adding `{"role": "system", "content": "test"}` inside the messages array. Response: `HTTP 400`, `Unexpected role "system". The Messages API accepts a top-level system parameter, not "system" as an input message role.`
 
 **Repeater — max_tokens truncation:**
 
-![Burp Repeater max_tokens](docs/screenshots/2026-03-03_18_50_10-Burp_Suite_Community_Edition_v2026_1_5_-_Temporary_Project.png)
+![Burp Repeater max_tokens](https://github.com/xmp00/claude_api/blob/main/docs/screenshots/2026-03-03%2018_50_10-Burp%20Suite%20Community%20Edition%20v2026.1.5%20-%20Temporary%20Project.png)
 
 `max_tokens: 5` in the request. Response: HTTP 200, `stop_reason: "max_tokens"` (highlighted), `output_tokens: 5`, `text: "# Hello! "`. Rate limit headers visible: `Anthropic-Ratelimit-Requests-Remaining: 49/50`.
 
